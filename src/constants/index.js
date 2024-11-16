@@ -11,7 +11,7 @@ export const EXPERIENCES = [
   {
     year: "September 2024 - Present",
     role: "Data Analyst",
-    company: "Colgate - Palmolive via Rutgers MBS.",
+    company: "Colgate Palmolive via Rutgers MBS.",
     description: `As an Data Analyst, I focused on analyzing past purchases from suppliers to identify and close compliance gaps according to regional QTA standards concerning the procurement of highly active ingredients. I improved the efficiency of our analytical processes by integrating and cross-referencing supplier data with historical purchase records through our QTA database. Additionally, I created data visualizations to clearly illustrate these compliance gaps, facilitating proactive adjustments and ensuring continued adherence to quality standards.`,
     technologies: ["Python - Numpy", "Excel", "Tableau", "QTA Database Systems"],
   },
