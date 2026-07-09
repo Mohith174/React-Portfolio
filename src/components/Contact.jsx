@@ -2,109 +2,113 @@ import { useState } from "react";
 import { CONTACT } from "../constants";
 import { motion } from "framer-motion";
 import { FaPaperPlane } from "react-icons/fa";
-import emailjs from "emailjs-com"; // Ensure this import is correct and the library is installed
+import emailjs from "emailjs-com";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ user_name: '', user_email: '', message: '' });
-  const [status, setStatus] = useState('');
+  const [formData, setFormData] = useState({ user_name: "", user_email: "", message: "" });
+  const [status, setStatus] = useState("");
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    emailjs.send(
-      'service_orx43dp',       // Your EmailJS Service ID, updated
-      'template_1mobhdd',      // Your new EmailJS Template ID
-      formData,
-      'rGkW1h9mQcRzLp3l3'      // Your new EmailJS User ID (Public Key)
-    ).then((response) => {
-      console.log('SUCCESS!', response.status, response.text);
-      setStatus('Email sent successfully!');
-      setFormData({ user_name: '', user_email: '', message: '' }); // Clear form
-    }).catch((error) => {
-      console.log('FAILED...', error);
-      setStatus('Failed to send email');
-    });
+    emailjs
+      .send("service_orx43dp", "template_1mobhdd", formData, "rGkW1h9mQcRzLp3l3")
+      .then(() => {
+        setStatus("Message sent — I'll get back to you soon.");
+        setFormData({ user_name: "", user_email: "", message: "" });
+      })
+      .catch(() => {
+        setStatus("Something went wrong. Try emailing me directly instead.");
+      });
   };
 
   return (
-    <div className="border-b border-neutral-900 pb-20 text-white">
-      <motion.h1 
-        className="my-10 text-center text-4xl"
-        initial={{ opacity: 0, y: 100 }}
+    <div id="contact" className="scroll-mt-20 py-16">
+      <motion.h1
+        className="mb-12 text-center text-3xl font-semibold text-neutral-900"
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
         Contact Me
       </motion.h1>
-      
-      <div className="flex flex-col lg:flex-row justify-between items-start p-5 lg:p-10 gap-10">
-        <div className="lg:w-1/2 mb-10 lg:mb-0 space-y-4">
-          <h2 className="text-2xl mb-4">Get in touch</h2>
-          <p><strong>Email:</strong> {CONTACT.email}</p>
-          <p><strong>Phone:</strong> {CONTACT.phoneNo}</p>
-          <p className="text-neutral-400">
-            Available through text and email throughout the week, for calls, please send a message beforehand to schedule an appropriate time!
+
+      <div className="flex flex-col items-start justify-between gap-10 lg:flex-row">
+        <div className="space-y-4 lg:w-1/2">
+          <h2 className="mb-4 text-2xl font-semibold text-neutral-900">Get in touch</h2>
+          <p className="text-neutral-700">
+            <strong className="text-neutral-900">Email:</strong> {CONTACT.email}
+          </p>
+          <p className="text-neutral-700">
+            <strong className="text-neutral-900">Phone:</strong> {CONTACT.phoneNo}
+          </p>
+          <p className="text-neutral-500">
+            Available through text and email throughout the week — for calls, send a message beforehand to schedule a time.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="lg:w-1/2 space-y-4 ml-auto">
-          <motion.input 
-            type="text" 
+        <form onSubmit={handleSubmit} className="ml-auto space-y-4 lg:w-1/2">
+          <motion.input
+            type="text"
             name="user_name"
-            placeholder="Name" 
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white text-black font-bold"
+            placeholder="Name"
+            className="w-full rounded-lg border border-neutral-300 p-2.5 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
             value={formData.user_name}
             onChange={handleChange}
             whileInView={{ opacity: 1, x: 0 }}
-            initial={{ opacity: 0, x: -100 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, x: -60 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            required
           />
-          <motion.input 
-            type="email" 
+          <motion.input
+            type="email"
             name="user_email"
-            placeholder="Email" 
-            className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white text-black font-bold"
+            placeholder="Email"
+            className="w-full rounded-lg border border-neutral-300 p-2.5 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
             value={formData.user_email}
             onChange={handleChange}
             whileInView={{ opacity: 1, x: 0 }}
-            initial={{ opacity: 0, x: 100 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, x: 60 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            required
           />
-          <motion.textarea 
+          <motion.textarea
             name="message"
-            placeholder="Message" 
-            className="border p-2 w-full h-32 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white text-black"
+            placeholder="Message"
+            className="h-32 w-full rounded-lg border border-neutral-300 p-2.5 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
             value={formData.message}
             onChange={handleChange}
             whileInView={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 50 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0, y: 40 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            required
           />
           <div className="flex justify-end">
-            <motion.button 
-              type="submit" 
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold hover:from-indigo-500 hover:to-purple-500 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            <motion.button
+              type="submit"
+              className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 font-semibold text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Send
-              <motion.div 
+              <motion.div
                 className="text-lg"
-                initial={{ x: 0 }}
-                animate={{ x: 10 }}
-                transition={{ type: "tween", repeat: Infinity, repeatType: "reverse", duration: 0.8 }}
+                animate={{ x: [0, 6, 0] }}
+                transition={{ repeat: Infinity, duration: 1.2 }}
               >
                 <FaPaperPlane />
               </motion.div>
             </motion.button>
           </div>
-          {status && <p className="text-center mt-4">{status}</p>}
+          {status && <p className="mt-4 text-center text-sm text-neutral-600">{status}</p>}
         </form>
       </div>
     </div>

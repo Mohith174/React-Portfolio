@@ -1,135 +1,57 @@
-// import { HERO_CONTENT } from "../constants";
-// import profilePic from "../assets/profile-pic.jpg" //change this
-// import { delay, motion } from "framer-motion";
-
-// const container = (delay) => ({
-//   hidden: { x: -100, opacity: 0},
-//   visible: {
-//     x: 0, 
-//     opacity: 1,
-//     transition: {duration: 0.5, delay: delay},
-
-//   },
-// });
-
-// const Hero = () => {
-//   return (
-//     <div className="border-b border-neutral-900 pb-4 lg:mb-35">
-//       <div className="flex flex-wrap">
-//         <div className="w-full lg:w-1/2">
-//           <div className="flex flex-col items-center lg:items-start">
-//             <motion.h1
-//             variants={container(0)}
-//             initial="hidden"
-//             animate="visible"
-//             className="pb-16 text-6xl font-thin tracking-tight lg:mt-16 lg:text-8xl">
-//               Mohith Kodavati
-//             </motion.h1>
-
-//             <motion.span
-//             variants={container(0.5)}
-//             initial="hidden"
-//             animate="visible"
-
-//             whileHover={{scale: 1.2}}
-//             whileTap={{scale:1.1}}
-//             drag="x"
-//             dragConstraints={{left: -100, right: 100}}
-            
-//             className="bg-gradient-to-r from-pink-300 via-slate-500 to-purple-500 bg-clip-text text-3xl tracking-tight text-transparent">
-//               Full Stack Developer
-//             </motion.span>
-//             <motion.p
-//             variants={container(1)}
-//             initial="hidden"
-//             animate="visible" 
-//             className="my-2 max-w-xl py-6 font-light tracking-tighter">
-//               {HERO_CONTENT}
-//             </motion.p>
-//           </div>
-//         </div>
-//         <div className="w-full lg:w-1/2 lg:p-8">
-//         <div className="flex justify-center">
-//             <motion.img
-//             initial={{x: 100, opacity: 0}}
-//             animate={{x: 0, opacity: 1}}
-//             transition={{duration: 1, delay: 1.2}}
-//             src={profilePic}
-//             alt="Mohith Kodavati" />
-//         </div>
-        
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Hero;
-
-
 import { HERO_CONTENT } from "../constants";
-import profilePic from "../assets/profile-pic.jpg"; // Update path as needed
 import { motion } from "framer-motion";
+import TerminalIntro from "./TerminalIntro";
 
 const container = (delay) => ({
-  hidden: { x: -100, opacity: 0 },
+  hidden: { x: -60, opacity: 0 },
   visible: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.5, delay: delay },
+    transition: { duration: 0.6, delay },
   },
 });
 
 const Hero = () => {
   return (
-    <div className="border-b border-neutral-900 pb-4 lg:mb-35">
-      <div className="flex flex-wrap">
+    <div className="border-b border-neutral-200 pb-16 pt-4 lg:pt-12">
+      <div className="flex flex-wrap items-center gap-12 lg:flex-nowrap">
         <div className="w-full lg:w-1/2">
-          <div className="flex flex-col items-center lg:items-start">
-            <motion.h1
-              variants={container(0)}
-              initial="hidden"
-              animate="visible"
-              className="pb-16 text-6xl font-thin tracking-tight lg:mt-16 lg:text-8xl"
-            >
-              Mohith Kodavati
-            </motion.h1>
+          <motion.h1
+            variants={container(0)}
+            initial="hidden"
+            animate="visible"
+            className="text-5xl font-semibold tracking-tight text-neutral-900 lg:text-7xl"
+          >
+            Mohith Kodavati
+          </motion.h1>
 
-            <motion.span
-              variants={container(0.5)}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 1.1 }}
-              drag="x"
-              dragConstraints={{ left: -100, right: 100 }}
-              className="bg-gradient-to-r from-pink-300 via-slate-500 to-purple-500 bg-clip-text text-3xl tracking-tight text-transparent"
-            >
-              Junior Software Engineer | Java, Spring, Python, AI
-            </motion.span>
-            <motion.p
-              variants={container(1)}
-              initial="hidden"
-              animate="visible"
-              className="my-2 max-w-xl py-6 font-light tracking-tighter lex justify-center lg:justify-start text-lg"
-            >
-              {HERO_CONTENT}
-            </motion.p>
-          </div>
+          <motion.div
+            variants={container(0.15)}
+            initial="hidden"
+            animate="visible"
+            className="mt-4 font-mono text-lg text-purple-600"
+          >
+            Backend Software Engineer — Java · Spring · AI systems
+          </motion.div>
+
+          <motion.p
+            variants={container(0.3)}
+            initial="hidden"
+            animate="visible"
+            className="my-6 max-w-xl text-lg leading-relaxed text-neutral-600"
+          >
+            {HERO_CONTENT}
+          </motion.p>
         </div>
-        <div className="w-full lg:w-1/2 lg:p-8">
-          <div className="flex justify-center">
-            <motion.img
-              initial={{ x: 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 1, delay: 1.2 }}
-              src={profilePic}
-              alt="Mohith Kodavati"
-              className="rounded-2xl shadow-lg" // Apply rounded corners and optional shadow
-              
-            />
-          </div>
-        </div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex w-full justify-center lg:w-1/2"
+        >
+          <TerminalIntro />
+        </motion.div>
       </div>
     </div>
   );

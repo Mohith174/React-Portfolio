@@ -4,37 +4,35 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <div className="border-b border-neutral-900 pb-4">
-      <h1 className="my-20 text-center text-4xl">
-        About <span className="text-neutral-500">Me</span>
+    <div className="border-b border-neutral-200 py-16">
+      <h1 className="mb-12 text-center text-3xl font-semibold text-neutral-900">
+        About <span className="text-purple-600">Me</span>
       </h1>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap items-center gap-8">
         <motion.div
-        whileInView={{opacity: 1, x: 0}}
-        initial={{opacity: 0, x:-100}}
-        transition={{duration: 0.5}}
-        
-        className="w-full lg:w-1/2 lg:p-8">
+          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: -60 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="w-full lg:w-2/5"
+        >
           <div className="flex items-center justify-center">
-            <img className="rounded-2xl" src={aboutImg} alt="about" />
+            <img className="rounded-2xl shadow-lg" src={aboutImg} alt="Mohith Kodavati" />
           </div>
         </motion.div>
 
         <motion.div
-        whileInView={{opacity: 1, x: 0}}
-        initial={{opacity: 0, x:100}}
-        transition={{duration: 0.5}}        
-        className="w-full lg:w-1/2">
-          <div className="flex justify-center lg:justify-start text-lg leading-relaxed  p-4 ">
-            <p className="my-2 max-w-xl py-6 ">{ABOUT_TEXT}</p>
-          </div>
+          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: 60 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="w-full lg:w-3/5"
+        >
+          <p className="max-w-xl text-lg leading-relaxed text-neutral-700">{ABOUT_TEXT}</p>
         </motion.div>
-
       </div>
     </div>
   );
 };
 
 export default About;
-
-
