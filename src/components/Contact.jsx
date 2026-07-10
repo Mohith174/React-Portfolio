@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { CONTACT } from "../constants";
 import { motion } from "framer-motion";
 import { FaPaperPlane } from "react-icons/fa";
 import emailjs from "emailjs-com";
+
+const CONTACT = {
+  address: "Dallas, TX · Open to relocate / remote",
+  phoneNo: "+1 (803) 908-9898",
+  email: "mohitkod178@gmail.com",
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({ user_name: "", user_email: "", message: "" });

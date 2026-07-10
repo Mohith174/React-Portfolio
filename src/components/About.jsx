@@ -1,5 +1,4 @@
 import aboutImg from "../assets/about-me.jpg";
-import { ABOUT_TEXT } from "../constants";
 import { motion } from "framer-motion";
 
 const About = () => {
@@ -34,7 +33,19 @@ const About = () => {
           transition={{ duration: 0.5 }}
           className="w-full lg:w-3/4"
         >
-          <p className="max-w-xl text-lg leading-relaxed text-neutral-700">{ABOUT_TEXT}</p>
+          <div className="max-w-xl space-y-4 text-lg leading-relaxed text-neutral-700">
+            <p>
+              I&apos;m a recent Computer Science and Data Science (statistics focus) graduate from Rutgers
+              University–New Brunswick, based in Dallas and open to opportunities anywhere.
+            </p>
+            <p>
+              I&apos;m Python-first and AI-native: I build agentic systems — LLM agents wired to real tools instead
+              of free-form chat — and back that with production-grade backend engineering in Spring Boot and Java. I
+              came up building full-stack products (React, Next.js, Node.js, Postgres, MongoDB) and freelancing
+              early, which taught me to build for changing requirements instead of ideal ones.
+            </p>
+            <p>Outside of engineering: weightlifting, MMA, cooking, guitar.</p>
+          </div>
         </motion.div>
       </div>
     </div>
