@@ -42,6 +42,9 @@ const Contact = () => {
         <div className="space-y-4 lg:w-1/2">
           <h2 className="mb-4 text-2xl font-semibold text-neutral-900">Get in touch</h2>
           <p className="text-neutral-700">
+            <strong className="text-neutral-900">Location:</strong> {CONTACT.address}
+          </p>
+          <p className="text-neutral-700">
             <strong className="text-neutral-900">Email:</strong> {CONTACT.email}
           </p>
           <p className="text-neutral-700">

@@ -35,7 +35,11 @@ const Experience = () => {
               <h6 className="mb-2 font-semibold text-neutral-900">
                 {experience.role} — <span className="text-purple-600">{experience.company}</span>
               </h6>
-              <p className="mb-4 text-neutral-600">{experience.description}</p>
+              <ul className="mb-4 list-disc space-y-1.5 pl-5 text-neutral-600">
+                {experience.bullets.map((bullet, i) => (
+                  <li key={i}>{bullet}</li>
+                ))}
+              </ul>
               <div className="flex flex-wrap gap-2">
                 {experience.technologies.map((tech, i) => (
                   <span key={i} className="rounded-md bg-purple-50 px-2 py-1 font-mono text-xs font-medium text-purple-700">

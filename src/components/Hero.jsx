@@ -31,7 +31,7 @@ const Hero = () => {
             animate="visible"
             className="mt-4 font-mono text-lg text-purple-600"
           >
-            Backend Software Engineer — Java · Spring · AI systems
+            Backend Engineer, AI-native — Java · Spring · Agentic Systems
           </motion.div>
 
           <motion.p

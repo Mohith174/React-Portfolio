@@ -14,10 +14,16 @@ const About = () => {
           initial={{ opacity: 0, x: -60 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="w-full lg:w-2/5"
+          className="w-full lg:w-1/4"
         >
-          <div className="flex items-center justify-center">
-            <img className="rounded-2xl shadow-lg" src={aboutImg} alt="Mohith Kodavati" />
+          <div className="flex items-center justify-center lg:justify-start">
+            <motion.img
+              whileHover={{ scale: 1.05, rotate: -2 }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              className="w-48 rounded-2xl shadow-lg lg:w-full"
+              src={aboutImg}
+              alt="Mohith Kodavati"
+            />
           </div>
         </motion.div>
 
@@ -26,7 +32,7 @@ const About = () => {
           initial={{ opacity: 0, x: 60 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="w-full lg:w-3/5"
+          className="w-full lg:w-3/4"
         >
           <p className="max-w-xl text-lg leading-relaxed text-neutral-700">{ABOUT_TEXT}</p>
         </motion.div>

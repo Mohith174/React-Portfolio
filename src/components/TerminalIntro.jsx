@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 
 const LINES = [
   { prompt: "$ whoami", output: "Mohith Kodavati" },
-  { prompt: "$ cat role.txt", output: "Backend Software Engineer — Java, Spring, distributed systems, AI" },
-  { prompt: "$ status --check", output: "Open to backend & AI engineering roles." },
+  { prompt: "$ cat role.txt", output: "Backend Engineer, AI-native — Java, Spring, agentic systems" },
+  { prompt: "$ status --check", output: "Open to roles. Based in Dallas, open to relocate/remote." },
 ];
 
 // Types out a fake terminal session line by line, then blinks a cursor.

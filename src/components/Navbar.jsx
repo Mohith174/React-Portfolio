@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 
@@ -17,30 +18,33 @@ const Navbar = () => {
           Contact
         </Link>
         <div className="flex items-center gap-4 text-xl text-neutral-500">
-          <a
+          <motion.a
+            whileHover={{ scale: 1.2, rotate: -6 }}
             href="https://www.linkedin.com/in/mohitkodavati"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors duration-200 hover:text-blue-600"
           >
             <FaLinkedin />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.2, rotate: 6 }}
             href="https://github.com/Mohith174"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors duration-200 hover:text-neutral-900"
           >
             <FaGithub />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.2, rotate: -6 }}
             href="https://twitter.com/Kodavati17"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors duration-200 hover:text-neutral-900"
           >
             <FaSquareXTwitter />
-          </a>
+          </motion.a>
         </div>
       </div>
     </nav>
