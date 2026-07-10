@@ -69,7 +69,7 @@ const Experience = () => {
               className="w-full max-w-xl lg:w-3/4"
             >
               <h6 className="mb-2 font-semibold text-neutral-900">
-                {experience.role} — <span className="text-purple-600">{experience.company}</span>
+                {experience.role} · <span className="text-purple-600">{experience.company}</span>
               </h6>
               <ul className="mb-4 list-disc space-y-1.5 pl-5 text-neutral-600">
                 {experience.bullets.map((bullet, i) => (

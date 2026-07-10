@@ -23,7 +23,7 @@ const Contact = () => {
     emailjs
       .send("service_orx43dp", "template_1mobhdd", formData, "rGkW1h9mQcRzLp3l3")
       .then(() => {
-        setStatus("Message sent — I'll get back to you soon.");
+        setStatus("Message sent. I'll get back to you soon.");
         setFormData({ user_name: "", user_email: "", message: "" });
       })
       .catch(() => {
@@ -56,7 +56,7 @@ const Contact = () => {
             <strong className="text-neutral-900">Phone:</strong> {CONTACT.phoneNo}
           </p>
           <p className="text-neutral-500">
-            Available through text and email throughout the week — for calls, send a message beforehand to schedule a time.
+            Available through text and email throughout the week. For calls, send a message beforehand to schedule a time.
           </p>
         </div>
 

@@ -15,7 +15,7 @@ const ProjectsSection = () => {
         Projects
       </motion.h1>
       <p className="mx-auto mb-12 max-w-lg text-center text-neutral-500">
-        A few things I&rsquo;ve actually built end to end — click through for architecture and the decisions behind them.
+        A few things I&rsquo;ve actually built end to end. Click through for the architecture and the decisions behind them.
       </p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {PROJECTS.map((project, i) => (

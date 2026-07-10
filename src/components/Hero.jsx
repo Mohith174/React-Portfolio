@@ -30,7 +30,7 @@ const Hero = () => {
             animate="visible"
             className="mt-4 font-mono text-lg text-purple-600"
           >
-            Python-First, AI-Native Software Engineer — Agentic Systems · Spring Boot
+            Python-First, AI-Native Software Engineer · Agentic Systems · Spring Boot
           </motion.div>
 
           <motion.div
@@ -40,9 +40,9 @@ const Hero = () => {
             className="my-6 max-w-xl space-y-4 text-lg leading-relaxed text-neutral-600"
           >
             <p>
-              I&apos;m a Python-first, AI-native software engineer: I build agentic systems — LLM agents that call
-              tools and act on real data, not just chat — on strong fundamentals in data pipelines, REST APIs, and
-              system design.
+              I&apos;m a Python-first, AI-native software engineer. I build agentic systems: LLM agents that call
+              tools and act on real data, not just chat, grounded in strong fundamentals in data pipelines, REST
+              APIs, and system design.
             </p>
             <p>
               Spring Boot and Java are my strong secondary stack, for backend services that need to be

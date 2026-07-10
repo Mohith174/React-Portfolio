@@ -39,8 +39,8 @@ const About = () => {
               University–New Brunswick, based in Dallas and open to opportunities anywhere.
             </p>
             <p>
-              I&apos;m Python-first and AI-native: I build agentic systems — LLM agents wired to real tools instead
-              of free-form chat — and back that with production-grade backend engineering in Spring Boot and Java. I
+              I&apos;m Python-first and AI-native. I build agentic systems, LLM agents wired to real tools instead
+              of free-form chat, and back that with production-grade backend engineering in Spring Boot and Java. I
               came up building full-stack products (React, Next.js, Node.js, Postgres, MongoDB) and freelancing
               early, which taught me to build for changing requirements instead of ideal ones.
             </p>

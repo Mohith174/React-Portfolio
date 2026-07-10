@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const LINES = [
   { prompt: "$ whoami", output: "Mohith Kodavati" },
-  { prompt: "$ cat role.txt", output: "Python-first, AI-native SWE — agentic systems, Spring Boot" },
+  { prompt: "$ cat role.txt", output: "Python-first, AI-native SWE: agentic systems, Spring Boot" },
   { prompt: "$ status --check", output: "Open to roles. Based in Dallas, open to relocate/remote." },
 ];
 

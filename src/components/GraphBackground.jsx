@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-// Lightweight animated node/edge network — a visual nod to the graph-DB and
+// Lightweight animated node/edge network, a visual nod to the graph-DB and
 // network-analysis themes running through the featured projects.
 const GraphBackground = ({ nodeCount = 40, className = "" }) => {
   const canvasRef = useRef(null);

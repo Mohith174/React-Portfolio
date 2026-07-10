@@ -4,7 +4,7 @@ export const PROJECTS = [
   {
     slug: "spectr",
     title: "SPECTR",
-    tagline: "Forensic risk terminal for Solana tokens — paste an address, get a verdict.",
+    tagline: "Forensic risk terminal for Solana tokens. Paste an address, get a verdict.",
     summary:
       "An AI-fronted terminal that never guesses: the model calls a deterministic risk-scoring engine against live on-chain data and reports exactly what it finds.",
     status: "building",
@@ -12,19 +12,19 @@ export const PROJECTS = [
     liveUrl: null,
     tech: ["Next.js", "TypeScript", "Prisma", "Postgres", "Redis", "NVIDIA NIM"],
     problem:
-      "Rug pulls and scam tokens are constant on Solana. Most tools hand you a price chart and let you guess. SPECTR is a terminal you paste an address into and get back a verdict — SAFE, CAUTION, HIGH, or RUG — with the specific flags that produced it.",
+      "Rug pulls and scam tokens are constant on Solana. Most tools hand you a price chart and let you guess. SPECTR is a terminal you paste an address into and get back a verdict (SAFE, CAUTION, HIGH, or RUG) with the specific flags that produced it.",
     decisions: [
       {
         title: "Tool-calling, not free-form generation",
-        body: "The LLM never invents a risk score. It calls assess_token_risk and narrates exactly what the deterministic scoring engine returns — holder concentration, liquidity depth, volume anomalies. Verdicts are reproducible, not hallucinated.",
+        body: "The LLM never invents a risk score. It calls assess_token_risk and narrates exactly what the deterministic scoring engine returns: holder concentration, liquidity depth, volume anomalies. Verdicts are reproducible, not hallucinated.",
       },
       {
         title: "OpenAI-compatible, not OpenAI-locked",
-        body: "The chat/tool-calling layer runs against NVIDIA NIM's free, OpenAI-compatible endpoint (Llama 3.1) instead of a paid model — same tools-calling contract, zero marginal cost per query.",
+        body: "The chat/tool-calling layer runs against NVIDIA NIM's free, OpenAI-compatible endpoint (Llama 3.1) instead of a paid model, with the same tool-calling contract and zero marginal cost per query.",
       },
       {
         title: "Cross-referenced data, not single-source",
-        body: "Holder distribution comes from Helius, pricing and liquidity are cross-checked against Dexscreener and Birdeye — one source lying doesn't silently produce a wrong verdict.",
+        body: "Holder distribution comes from Helius, and pricing and liquidity are cross-checked against Dexscreener and Birdeye, so one source lying doesn't silently produce a wrong verdict.",
       },
     ],
     stack: [
@@ -64,7 +64,7 @@ Streamed response, persisted to Postgres for the accuracy dashboard`,
     decisions: [
       {
         title: "Kafka Streams over a plain consumer",
-        body: "Rolling per-domain edit aggregates need a state store and fault tolerance a bare consumer loop doesn't give you for free — Kafka Streams' state stores handle both.",
+        body: "Rolling per-domain edit aggregates need a state store and fault tolerance that a bare consumer loop doesn't give you for free. Kafka Streams' state stores handle both.",
       },
       {
         title: "Schema Registry from day one",
@@ -143,7 +143,7 @@ Structured report (fpdf) + Streamlit analytics dashboard`,
   {
     slug: "payna",
     title: "Payna",
-    tagline: "Regulatory filing tracker — know exactly what's due, and when, across every jurisdiction you operate in.",
+    tagline: "Regulatory filing tracker. Know exactly what's due, and when, across every jurisdiction you operate in.",
     summary:
       "Entities, licenses, and requirements modeled as a graph; an LLM extraction pipeline reads source filings and populates it; a traversal engine turns 'what does this business need to file, and by when' into a single query.",
     status: "building",
@@ -155,7 +155,7 @@ Structured report (fpdf) + Streamlit analytics dashboard`,
     decisions: [
       {
         title: "Requirements as graph nodes, not edge properties",
-        body: "State, LicenseType, Requirement, and Entity are all first-class nodes connected by REQUIRES / RENEWS_EVERY / DEPENDS_ON edges — so a requirement can have its own deadlines and dependencies rather than being flattened into a relationship attribute.",
+        body: "State, LicenseType, Requirement, and Entity are all first-class nodes connected by REQUIRES / RENEWS_EVERY / DEPENDS_ON edges, so a requirement can have its own deadlines and dependencies rather than being flattened into a relationship attribute.",
       },
       {
         title: "LLM extraction feeds the graph, doesn't replace it",
