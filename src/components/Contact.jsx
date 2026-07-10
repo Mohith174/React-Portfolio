@@ -107,13 +107,9 @@ const Contact = () => {
               whileTap={{ scale: 0.95 }}
             >
               Send
-              <motion.div
-                className="text-lg"
-                animate={{ x: [0, 6, 0] }}
-                transition={{ repeat: Infinity, duration: 1.2 }}
-              >
+              <span className="text-lg">
                 <FaPaperPlane />
-              </motion.div>
+              </span>
             </motion.button>
           </div>
           {status && <p className="mt-4 text-center text-sm text-neutral-600">{status}</p>}

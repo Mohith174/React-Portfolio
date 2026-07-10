@@ -6,8 +6,11 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 const Navbar = () => {
   return (
     <nav className="mb-12 flex items-center justify-between py-6">
-      <Link to="/" className="font-mono text-lg font-semibold tracking-tight text-neutral-900">
-        mohith<span className="text-purple-600">.</span>dev
+      <Link
+        to="/"
+        className="whitespace-nowrap font-mono text-base font-semibold tracking-tight text-neutral-900 sm:text-lg"
+      >
+        Mohith <span className="text-purple-600">Kodavati</span>
       </Link>
 
       <div className="flex items-center gap-6">

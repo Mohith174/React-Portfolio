@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 
 const EXPERIENCES = [
   {
-    year: "June 2025 - September 2025",
+    year: "Jun 2025 to Sep 2025",
     role: "Global Technology Intern",
-    company: "Colgate Palmolive - Technology Center",
+    company: "Colgate Palmolive, Technology Center",
     bullets: [
       "Engineered a Python (Pandas, NumPy) data-cleansing pipeline processing 50K+ records, coordinating with factory sites across 3 continents and enforcing multi-stage QA validation protocols.",
       "Automated document migration pipelines using VBA, Excel automation, and batch scripting to migrate 13K+ global documents from SAP DMS and Google Drive to ETQ, achieving 40% performance gains via optimized workflows and metadata reconciliation.",
@@ -14,7 +14,7 @@ const EXPERIENCES = [
     technologies: ["Python (Pandas, NumPy)", "VBA / Excel Automation", "Batch Scripts", "SAP DMS", "ETL Pipelines"],
   },
   {
-    year: "May 2025 - June 2025",
+    year: "May 2025 to Jun 2025",
     role: "Software Engineer Extern",
     company: "Data Storytelling, LLC",
     bullets: [
@@ -25,7 +25,7 @@ const EXPERIENCES = [
     technologies: ["TypeScript", "React", "Supabase", "Stripe API", "Vercel"],
   },
   {
-    year: "August 2024 - September 2024",
+    year: "Aug 2024 to Sep 2024",
     role: "Data Analyst Extern",
     company: "Colgate Palmolive via Rutgers MBS",
     bullets: [
@@ -57,9 +57,11 @@ const Experience = () => {
               initial={{ opacity: 0, x: -40 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="w-full lg:w-1/4"
+              className="w-full lg:w-1/4 lg:pr-10"
             >
-              <p className="mb-2 font-mono text-sm text-neutral-500">{experience.year}</p>
+              <p className="mb-3 pt-0.5 font-mono text-sm text-neutral-500 lg:mb-2 lg:text-right">
+                {experience.year}
+              </p>
             </motion.div>
             <motion.div
               whileInView={{ opacity: 1, x: 0 }}
