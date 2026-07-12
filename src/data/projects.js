@@ -7,7 +7,7 @@ export const PROJECTS = [
     tagline: "Paste a Solana token address, get a risk verdict with the evidence behind it.",
     summary:
       "An AI terminal that never guesses: the model calls a deterministic risk-scoring engine against live on-chain data and reports exactly what it finds.",
-    status: "building",
+    status: "showcase",
     repoUrl: "https://github.com/Mohith174/spectr",
     liveUrl: null,
     tech: ["Next.js", "TypeScript", "Postgres", "Redis", "LLM tool-calling"],
@@ -19,23 +19,23 @@ export const PROJECTS = [
         body: "The LLM never invents a risk score. It calls the scoring engine and narrates what comes back: holder concentration, liquidity depth, volume anomalies. Verdicts are reproducible, not hallucinated.",
       },
       {
-        title: "Cross-referenced data, not single-source",
-        body: "Holder data comes from Helius; price and liquidity are cross-checked against Dexscreener and Birdeye, so one source lying doesn't silently produce a wrong verdict.",
+        title: "Deterministic rules override the model",
+        body: "Hardcoded thresholds decide the verdict, not the AI. A wallet holding over 80% of supply forces a RUG verdict regardless of what the model concludes — the model explains findings, but never gets the final say on the ones that matter.",
       },
     ],
     stack: [
       { component: "Framework", tech: "Next.js (App Router) + TypeScript" },
       { component: "Data", tech: "Postgres (Prisma) + Upstash Redis" },
-      { component: "Solana sources", tech: "Helius · Birdeye · Dexscreener" },
-      { component: "LLM layer", tech: "OpenAI-compatible tool-calling (NVIDIA NIM)" },
-      { component: "Alerts", tech: "Telegram Bot API" },
+      { component: "Solana sources", tech: "Helius (holders) · Dexscreener (price/liquidity)" },
+      { component: "LLM layer", tech: "Llama 3.1 70B via NVIDIA NIM (OpenAI-compatible tool-calling)" },
+      { component: "Alerts", tech: "Telegram Bot API + daily Vercel cron" },
     ],
     diagram: `User input ("check <address>")
         |
         v
 Terminal agent --tool call--> Risk-scoring engine
         |                            |
-        |             Helius . Dexscreener . Birdeye
+        |               Helius . Dexscreener
         |                            |
         <----------- verdict + flags -
         |
@@ -117,7 +117,7 @@ Parser + content hash --> new / amended / duplicate --> Postgres (Neon)
       { component: "Streaming", tech: "Kafka + Kafka Streams + Schema Registry" },
       { component: "Ingestion", tech: "SSE consumer on the Wikimedia edit stream" },
       { component: "Monitoring", tech: "Prometheus + Grafana + Alertmanager" },
-      { component: "Orchestration", tech: "Docker Compose (9 services)" },
+      { component: "Orchestration", tech: "Docker Compose (11 services)" },
     ],
     diagram: `Wikimedia SSE stream
         |
@@ -140,10 +140,10 @@ Ingestion service --> Kafka cluster (broker . schema registry)
     tagline: "Know exactly what your business has to file, and when, in every state you operate.",
     summary:
       "Regulatory requirements modeled as a graph: an LLM pipeline extracts structured rules from source filings, and one traversal answers what's due and by when.",
-    status: "building",
-    repoUrl: null,
-    liveUrl: null,
-    tech: ["TypeScript", "React", "Neo4j", "Postgres", "LLM extraction"],
+    status: "live",
+    repoUrl: "https://github.com/Mohith174/payna",
+    liveUrl: "https://payna-azure.vercel.app",
+    tech: ["TypeScript", "React", "Neo4j", "Postgres", "LLM extraction", "Vercel"],
     problem:
       "Businesses operating across states track a shifting web of licenses, renewal cadences, and dependent filings by hand. Payna models that web as a graph and answers one question directly: for this entity's active licenses, what's required, and when.",
     decisions: [
@@ -157,10 +157,11 @@ Ingestion service --> Kafka cluster (broker . schema registry)
       },
     ],
     stack: [
-      { component: "Graph DB", tech: "Neo4j (schema + traversal engine)" },
-      { component: "Extraction", tech: "LLM structured extraction from source filings" },
+      { component: "Graph DB", tech: "Neo4j Aura (schema + traversal engine)" },
+      { component: "Extraction", tech: "NVIDIA Nemotron via OpenAI-compatible endpoint" },
       { component: "Audit store", tech: "Postgres (audit log, extraction attempts)" },
-      { component: "Frontend", tech: "React dashboard" },
+      { component: "Frontend", tech: "Vite + React dashboard" },
+      { component: "Deploy", tech: "Vercel serverless function + static web build" },
     ],
     diagram: `Source filing documents
         |
