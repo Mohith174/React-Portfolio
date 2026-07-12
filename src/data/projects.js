@@ -49,10 +49,10 @@ Streamed response, persisted for the accuracy dashboard`,
     tagline: "Turns California's PAGA labor-filing database into scored, searchable leads.",
     summary:
       "A scraper-to-dashboard pipeline that watches California's LWDA filing portal, ingests every new PAGA notice, and surfaces high-value leads for employment lawyers.",
-    status: "showcase",
-    repoUrl: null,
-    liveUrl: null,
-    tech: ["Python", "Flask", "Playwright", "SQLite"],
+    status: "live",
+    repoUrl: "https://github.com/Mohith174/paga-monitor",
+    liveUrl: "https://paga-monitor.vercel.app",
+    tech: ["Python", "Flask", "Playwright", "Postgres"],
     problem:
       "PAGA notices are public records, but they sit behind a Salesforce search portal with no API, no feed, and no alerts. For plaintiff firms, seeing a filing first is the whole game. PAGA Monitor polls the portal, dedupes what it finds, and scores each case so the best leads surface immediately.",
     decisions: [
@@ -61,27 +61,28 @@ Streamed response, persisted for the accuracy dashboard`,
         body: "The portal is a Salesforce Visualforce app. Instead of parsing rendered tables, a headless browser submits the real search form (required for the signed session) and then invokes the site's own remoting endpoint, getting a month of filings as structured JSON in about three seconds.",
       },
       {
-        title: "Content-hash dedup makes every scrape idempotent",
-        body: "Each case is hashed over its key fields, so the 5-minute poller and multi-month backfills share one write path: every row classifies as new, amended, or duplicate. Re-scraping an overlapping date range can't corrupt the data.",
+        title: "Ingestion and serving are split on purpose",
+        body: "A hosted, browser-based scraper is unreliable, so the Playwright worker runs separately and writes to Postgres; the Flask dashboard is stateless and only reads it, so it deploys cleanly to Vercel with zero knowledge of how the data got there.",
       },
     ],
     stack: [
       { component: "Scraper", tech: "Playwright (headless Chromium) → Visualforce remoting API" },
-      { component: "Storage", tech: "SQLite (cases, runs, notes, activity log)" },
-      { component: "Dashboard", tech: "Flask + Jinja2 (leads, priority queue, analytics, CSV export)" },
+      { component: "Storage", tech: "Postgres (Neon) — cases, runs, notes, activity log" },
+      { component: "Dashboard", tech: "Flask + Jinja2, deployed on Vercel" },
       { component: "Scoring", tech: "Rule-based lead scorer with alert thresholds" },
       { component: "Scheduler", tech: "5-minute polling during business hours" },
     ],
     diagram: `LWDA filing portal (Salesforce)
         |
         v
-Playwright: submit search form --> invoke remoting API --> JSON
+Playwright worker: submit search form --> invoke remoting API --> JSON
         |
         v
-Parser + content hash --> new / amended / duplicate
-        |
-        v
-SQLite --> Flask dashboard (leads . priority . analytics . CSV)`,
+Parser + content hash --> new / amended / duplicate --> Postgres (Neon)
+                                                              |
+                                                              v
+                                          Flask dashboard (leads . priority . analytics . CSV)
+                                          -- deployed on Vercel, reads Postgres only`,
     screenshots: [],
     metrics: [
       { label: "Cases tracked", value: "24,000+" },
