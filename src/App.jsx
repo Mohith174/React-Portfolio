@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import Navbar from "./components/Navbar";
+import { ThemeProvider } from "./hooks/useTheme";
 import PageTransition from "./components/PageTransition";
 import Home from "./pages/Home";
 import ProjectDetail from "./pages/ProjectDetail";
@@ -9,9 +9,8 @@ const App = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-800 antialiased selection:bg-purple-200">
-      <div className="container mx-auto px-8">
-        <Navbar />
+    <ThemeProvider>
+      <div className="min-h-screen overflow-x-hidden bg-neutral-50 font-mono text-neutral-800 antialiased transition-colors selection:bg-accent/30 dark:bg-neutral-950 dark:text-neutral-300">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route
@@ -33,7 +32,7 @@ const App = () => {
           </Routes>
         </AnimatePresence>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

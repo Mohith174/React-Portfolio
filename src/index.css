@@ -5,18 +5,57 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Host Grotesk", sans-serif;
-}
-
-.font-mono {
   font-family: "JetBrains Mono", ui-monospace, monospace;
+  color-scheme: light;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+.font-sans {
+  font-family: "Host Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
 ::selection {
-  background: #a855f7;
-  color: #fff;
+  background: #22d3ee;
+  color: #04141a;
+}
+
+/* Thin, theme-aware scrollbar so the terminal look stays consistent */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d8 transparent;
+}
+.dark * {
+  scrollbar-color: #3f3f46 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 8px;
+}
+.dark *::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+
+/* Equalizer bars for the music button — bounce like sound frequencies */
+@keyframes eqbar {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+.eq-bar {
+  transform-origin: bottom;
+  transform: scaleY(0.35);
+}
+.eq-playing .eq-bar {
+  animation: eqbar 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .eq-playing .eq-bar { animation: none; transform: scaleY(0.6); }
 }
