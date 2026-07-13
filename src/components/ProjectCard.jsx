@@ -30,7 +30,7 @@ const ProjectCard = ({ project, index }) => (
   >
     <Link
       to={`/projects/${project.slug}`}
-      className="group block rounded-lg border border-neutral-200 bg-white/40 p-5 transition-colors hover:border-accent dark:border-neutral-800 dark:bg-neutral-900/40 dark:hover:border-accent"
+      className="group block rounded-lg border border-neutral-200 bg-white/40 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent hover:shadow-lg hover:shadow-accent/5 dark:border-neutral-800 dark:bg-neutral-900/40 dark:hover:border-accent"
     >
       <div className="mb-2 flex items-center justify-between gap-3">
         <h3 className="font-semibold text-neutral-900 transition-colors group-hover:text-accent dark:text-neutral-100">

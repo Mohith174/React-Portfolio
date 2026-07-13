@@ -11,7 +11,7 @@ const CHANNELS = [
 
 const ContactSection = () => (
   <section id="contact" className="scroll-mt-24 py-16">
-    <SectionHeader num="05" title="CONTACT" />
+    <SectionHeader num="06" title="CONTACT" />
     <p className="mb-8 max-w-2xl text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-400">
       Open to opportunities and always up for a good problem. The fastest ways to reach me:
     </p>

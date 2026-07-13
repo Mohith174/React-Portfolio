@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
-import { FiSearch, FiSun, FiMoon } from "react-icons/fi";
+import { FiSearch, FiSun, FiMoon, FiMapPin } from "react-icons/fi";
 import { TbMusic, TbMusicOff } from "react-icons/tb";
 import { PROFILE } from "../data/profile";
 import { SECTIONS } from "../data/nav";
 import { useTheme } from "../hooks/useTheme";
-import { useAmbientAudio } from "../hooks/useAmbientAudio";
+import { useMusic } from "../hooks/useMusic";
 import { useScrollSpy } from "../hooks/useScrollSpy";
 import CommandPalette from "./CommandPalette";
+import RotatingTagline from "./RotatingTagline";
+import LiveViewers from "./LiveViewers";
 import avatar from "../assets/profile-pic.jpg";
 
 const SECTION_IDS = SECTIONS.map((s) => s.id);
@@ -26,12 +28,16 @@ const LiveClock = () => {
   return <span>{hh}:{mm}:{ss}</span>;
 };
 
-const IconControl = ({ onClick, label, children }) => (
+const IconControl = ({ onClick, label, active, children }) => (
   <button
     onClick={onClick}
     aria-label={label}
     title={label}
-    className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 text-neutral-600 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-400"
+    className={`flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
+      active
+        ? "border-accent text-accent"
+        : "border-neutral-300 text-neutral-600 hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-400"
+    }`}
   >
     {children}
   </button>
@@ -39,7 +45,7 @@ const IconControl = ({ onClick, label, children }) => (
 
 const Sidebar = () => {
   const { theme, toggleTheme } = useTheme();
-  const { playing, toggle: toggleAudio } = useAmbientAudio();
+  const { playing, loading: audioLoading, toggle: toggleAudio } = useMusic();
   const activeId = useScrollSpy(SECTION_IDS);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const navigate = useNavigate();
@@ -71,15 +77,16 @@ const Sidebar = () => {
           <img
             src={avatar}
             alt="Mohith Kodavati"
-            className="h-16 w-16 rounded-lg border border-neutral-300 object-cover grayscale dark:border-neutral-700"
+            className="h-16 w-16 rounded-lg border border-neutral-300 object-cover shadow-sm transition-transform hover:scale-105 dark:border-neutral-700"
           />
-          <div className="leading-tight">
-            <h1 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+          <div className="leading-none">
+            <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">
               {PROFILE.firstName}
             </h1>
-            <h1 className="text-2xl font-light tracking-tight text-neutral-500">
+            <h1 className="mt-0.5 text-3xl font-light tracking-tight text-neutral-500">
               {PROFILE.lastName}
             </h1>
+            <span className="mt-2 block h-1 w-10 rounded bg-accent" />
           </div>
         </div>
 
@@ -87,11 +94,18 @@ const Sidebar = () => {
           {PROFILE.title}
         </p>
 
-        <p className="mt-4 flex items-center gap-2 text-xs text-neutral-500">
-          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-          {PROFILE.status}
-          <span className="text-neutral-400">/ {PROFILE.location}</span>
-        </p>
+        <RotatingTagline phrases={PROFILE.taglines} />
+
+        <div className="mt-5 space-y-1.5 text-xs text-neutral-500">
+          <p className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+            {PROFILE.status}
+          </p>
+          <p className="flex items-center gap-2">
+            <FiMapPin className="text-neutral-400" />
+            {PROFILE.location} <span className="text-neutral-400">· {PROFILE.relocation}</span>
+          </p>
+        </div>
 
         {/* Numbered nav with scroll-spy */}
         <nav className="mt-10 flex flex-col gap-1">
@@ -162,8 +176,12 @@ const Sidebar = () => {
             <span>Search</span>
             <span className="ml-auto rounded border border-neutral-300 px-1.5 py-0.5 text-[10px] dark:border-neutral-700">⌘K</span>
           </button>
-          <IconControl onClick={toggleAudio} label={playing ? "Mute ambient audio" : "Play ambient audio"}>
-            {playing ? <TbMusic /> : <TbMusicOff />}
+          <IconControl
+            onClick={toggleAudio}
+            active={playing || audioLoading}
+            label={playing ? "Stop music" : audioLoading ? "Connecting…" : "Play lofi radio"}
+          >
+            {audioLoading ? <TbMusic className="animate-pulse" /> : playing ? <TbMusic /> : <TbMusicOff />}
           </IconControl>
           <IconControl onClick={toggleTheme} label={theme === "dark" ? "Switch to light" : "Switch to dark"}>
             {theme === "dark" ? <FiSun /> : <FiMoon />}
@@ -171,12 +189,10 @@ const Sidebar = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-auto hidden items-center gap-3 pt-10 text-[11px] text-neutral-500 lg:flex">
+        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-[11px] text-neutral-500 lg:mt-auto lg:pt-10">
           <LiveClock />
           <span>/ © 2026</span>
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" /> live
-          </span>
+          <LiveViewers />
         </div>
       </aside>
 

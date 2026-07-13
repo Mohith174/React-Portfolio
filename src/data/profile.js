@@ -8,6 +8,16 @@ export const PROFILE = {
   title: "B.S. Computer Science & Data Science, Rutgers University",
   status: "open to opportunities",
   location: "Dallas, TX",
+  relocation: "open to relocation",
+
+  // Short, punchy phrases for the auto-typing sidebar tagline.
+  taglines: [
+    "building agentic AI systems",
+    "python-first, AI-native",
+    "turning data into decisions",
+    "shipping full-stack, end to end",
+    "backend that holds up in prod",
+  ],
 
   // GitHub / LinkedIn / email are the emphasized primary channels.
   links: {
