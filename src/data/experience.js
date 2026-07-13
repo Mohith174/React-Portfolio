@@ -1,7 +1,16 @@
 // One broad line per role by design — the resume holds the full detail.
-// Roles/titles/dates verified against Mohith_Kodavati_ResumeMain.pdf.
+// Roles/titles/dates verified against the resume + user updates.
 
 export const EXPERIENCES = [
+  {
+    role: "AI & Document Intelligence Extern",
+    company: "Pfizer (Remote Externship via Extern)",
+    location: "Remote",
+    dates: "Jun 2026 – Present",
+    summary:
+      "Building an AI document-intelligence system for clinical supply workflows — extraction and OCR pipelines over 1,000+ pharma logistics documents, plus a RAG chatbot for sub-2s compliance Q&A.",
+    tech: ["Python", "PyMuPDF / OpenCV", "OCR", "RAG", "Gradio"],
+  },
   {
     role: "Global Technology Intern",
     company: "Colgate-Palmolive — Technology Campus",
@@ -24,7 +33,7 @@ export const EXPERIENCES = [
     role: "Data Analyst Extern",
     company: "Colgate-Palmolive (via Rutgers MBS)",
     location: "Remote",
-    dates: "Aug 2024 – Sep 2024",
+    dates: "Sep 2024 – Dec 2024",
     summary:
       "Analyzed supplier and procurement data to surface and close compliance gaps against regional quality standards.",
     tech: ["Python", "Tableau", "Excel"],

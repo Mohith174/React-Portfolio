@@ -113,15 +113,7 @@ const ContactSection = () => {
       </form>
 
       {/* Footer */}
-      <div className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-200 pt-6 text-xs text-neutral-500 dark:border-neutral-800">
-        <span className="flex flex-wrap items-center gap-2">
-          {PROFILE.hobbies.map((h, i) => (
-            <span key={h} className="flex items-center gap-2">
-              {i > 0 && <span className="text-neutral-300 dark:text-neutral-700">·</span>}
-              {h}
-            </span>
-          ))}
-        </span>
+      <div className="mt-16 flex items-center justify-end border-t border-neutral-200 pt-6 text-xs text-neutral-500 dark:border-neutral-800">
         <span>© 2026 Mohith Kodavati</span>
       </div>
     </section>

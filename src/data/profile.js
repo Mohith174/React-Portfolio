@@ -47,7 +47,4 @@ export const PROFILE = {
 
   // Compact focus list shown in the sidebar.
   focus: ["Agentic AI & LLM tooling", "Data Science", "Backend & Systems"],
-
-  // Personal interests for the footer line.
-  hobbies: ["weightlifting", "MMA", "cooking", "guitar"],
 };
