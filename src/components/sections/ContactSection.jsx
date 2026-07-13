@@ -1,13 +1,14 @@
 import { useRef, useState } from "react";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiArrowRight } from "react-icons/fi";
 import SectionHeader from "../SectionHeader";
 import { PROFILE } from "../../data/profile";
 
-// Reused from the original working contact form.
-const EMAILJS = { service: "service_orx43dp", template: "template_1mobhdd", key: "rGkW1h9mQcRzLp3l3" };
+// EmailJS config. Service ID confirmed by owner; template + public key should
+// belong to the SAME EmailJS account as this service — update if they differ.
+const EMAILJS = { service: "service_6uvinha", template: "template_1mobhdd", key: "rGkW1h9mQcRzLp3l3" };
 
 const LINKS = [
   { key: "email", label: "email", href: `mailto:${PROFILE.links.email}`, Icon: HiOutlineMail, external: false },
@@ -26,13 +27,18 @@ const ContactSection = () => {
     e.preventDefault();
     if (status === "sending") return;
     setStatus("sending");
+    // sendForm maps the inputs' `name` attributes to the template variables.
     emailjs
-      .send(EMAILJS.service, EMAILJS.template, form, EMAILJS.key)
+      .sendForm(EMAILJS.service, EMAILJS.template, formRef.current, { publicKey: EMAILJS.key })
       .then(() => {
         setStatus("sent");
         setForm({ user_name: "", user_email: "", message: "" });
       })
-      .catch(() => setStatus("error"));
+      .catch((err) => {
+        // Surface the real reason (bad service/template/key, blocked, etc.).
+        console.error("EmailJS send failed:", err?.text || err);
+        setStatus("error");
+      });
   };
 
   const inputCls =
