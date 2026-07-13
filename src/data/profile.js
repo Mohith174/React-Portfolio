@@ -44,4 +44,10 @@ export const PROFILE = {
     "Backend & System Design",
     "Full-Stack Development",
   ],
+
+  // Compact focus list shown in the sidebar.
+  focus: ["Agentic AI & LLM tooling", "Data Science", "Backend & Systems"],
+
+  // Personal interests for the footer line.
+  hobbies: ["weightlifting", "MMA", "cooking", "guitar"],
 };

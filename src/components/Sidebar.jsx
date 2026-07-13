@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiSearch, FiSun, FiMoon, FiMapPin } from "react-icons/fi";
-import { TbMusic, TbMusicOff } from "react-icons/tb";
 import { PROFILE } from "../data/profile";
 import { SECTIONS } from "../data/nav";
 import { useTheme } from "../hooks/useTheme";
@@ -11,7 +10,8 @@ import { useMusic } from "../hooks/useMusic";
 import { useScrollSpy } from "../hooks/useScrollSpy";
 import CommandPalette from "./CommandPalette";
 import RotatingTagline from "./RotatingTagline";
-import LiveViewers from "./LiveViewers";
+import ViewCounter from "./ViewCounter";
+import EqualizerBars from "./EqualizerBars";
 import avatar from "../assets/profile-pic.jpg";
 
 const SECTION_IDS = SECTIONS.map((s) => s.id);
@@ -22,26 +22,15 @@ const LiveClock = () => {
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
-  const hh = String(now.getHours()).padStart(2, "0");
-  const mm = String(now.getMinutes()).padStart(2, "0");
-  const ss = String(now.getSeconds()).padStart(2, "0");
-  return <span>{hh}:{mm}:{ss}</span>;
+  const p = (n) => String(n).padStart(2, "0");
+  return <span>{p(now.getHours())}:{p(now.getMinutes())}:{p(now.getSeconds())}</span>;
 };
 
-const IconControl = ({ onClick, label, active, children }) => (
-  <button
-    onClick={onClick}
-    aria-label={label}
-    title={label}
-    className={`flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
-      active
-        ? "border-accent text-accent"
-        : "border-neutral-300 text-neutral-600 hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-400"
-    }`}
-  >
-    {children}
-  </button>
-);
+const controlCls =
+  "flex h-10 w-full items-center gap-2.5 rounded-md border px-3 text-xs transition-colors";
+const controlIdle =
+  "border-neutral-300 text-neutral-600 hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-400";
+const controlActive = "border-accent text-accent";
 
 const Sidebar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -68,6 +57,9 @@ const Sidebar = () => {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     });
   };
+
+  const musicActive = playing || audioLoading;
+  const musicLabel = audioLoading ? "connecting…" : playing ? "Pause" : "Play";
 
   return (
     <>
@@ -96,19 +88,8 @@ const Sidebar = () => {
 
         <RotatingTagline phrases={PROFILE.taglines} />
 
-        <div className="mt-5 space-y-1.5 text-xs text-neutral-500">
-          <p className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-            {PROFILE.status}
-          </p>
-          <p className="flex items-center gap-2">
-            <FiMapPin className="text-neutral-400" />
-            {PROFILE.location} <span className="text-neutral-400">· {PROFILE.relocation}</span>
-          </p>
-        </div>
-
         {/* Numbered nav with scroll-spy */}
-        <nav className="mt-10 flex flex-col gap-1">
+        <nav className="mt-9 flex flex-col gap-1">
           {SECTIONS.map((s) => {
             const active = activeId === s.id;
             return (
@@ -137,62 +118,76 @@ const Sidebar = () => {
           })}
         </nav>
 
+        {/* Focus block — fills the column with a quick summary */}
+        <div className="mt-9">
+          <p className="mb-2.5 text-[10px] tracking-widest text-neutral-400">FOCUS</p>
+          <ul className="space-y-1.5 text-xs text-neutral-500">
+            {PROFILE.focus.map((f) => (
+              <li key={f} className="flex items-center gap-2">
+                <span className="text-accent">▸</span>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* Emphasized primary channels */}
-        <div className="mt-10 flex items-center gap-3">
-          <a
-            href={PROFILE.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-neutral-300 text-neutral-700 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300"
-          >
+        <div className="mt-9 flex items-center gap-3">
+          <a href={PROFILE.links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-neutral-300 text-neutral-700 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300">
             <FaGithub className="text-lg" />
           </a>
-          <a
-            href={PROFILE.links.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-neutral-300 text-neutral-700 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300"
-          >
+          <a href={PROFILE.links.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-neutral-300 text-neutral-700 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300">
             <FaLinkedin className="text-lg" />
           </a>
-          <a
-            href={`mailto:${PROFILE.links.email}`}
-            aria-label="Email"
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-neutral-300 text-neutral-700 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300"
-          >
+          <a href={`mailto:${PROFILE.links.email}`} aria-label="Email"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-neutral-300 text-neutral-700 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300">
             <HiOutlineMail className="text-xl" />
           </a>
         </div>
 
-        {/* Utility controls: search / music / theme */}
-        <div className="mt-6 flex items-center gap-2">
-          <button
-            onClick={() => setPaletteOpen(true)}
-            className="flex h-9 flex-1 items-center gap-2 rounded-md border border-neutral-300 px-3 text-xs text-neutral-500 transition-colors hover:border-accent dark:border-neutral-700"
-          >
+        {/* Controls: search / music / theme — stacked labeled buttons */}
+        <div className="mt-5 space-y-2">
+          <button onClick={() => setPaletteOpen(true)} className={`${controlCls} ${controlIdle}`}>
             <FiSearch />
             <span>Search</span>
             <span className="ml-auto rounded border border-neutral-300 px-1.5 py-0.5 text-[10px] dark:border-neutral-700">⌘K</span>
           </button>
-          <IconControl
+
+          <button
             onClick={toggleAudio}
-            active={playing || audioLoading}
-            label={playing ? "Stop music" : audioLoading ? "Connecting…" : "Play lofi radio"}
+            className={`${controlCls} ${musicActive ? controlActive : controlIdle}`}
+            aria-label={playing ? "Pause music" : "Play music"}
           >
-            {audioLoading ? <TbMusic className="animate-pulse" /> : playing ? <TbMusic /> : <TbMusicOff />}
-          </IconControl>
-          <IconControl onClick={toggleTheme} label={theme === "dark" ? "Switch to light" : "Switch to dark"}>
+            <EqualizerBars playing={playing} />
+            <span>{musicLabel}</span>
+            <span className="ml-auto text-[10px] text-neutral-400">lofi</span>
+          </button>
+
+          <button onClick={toggleTheme} className={`${controlCls} ${controlIdle}`}>
             {theme === "dark" ? <FiSun /> : <FiMoon />}
-          </IconControl>
+            <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+          </button>
+        </div>
+
+        {/* Availability — moved lower per request */}
+        <div className="mt-9 space-y-1.5 text-xs text-neutral-500">
+          <p className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+            {PROFILE.status}
+          </p>
+          <p className="flex items-center gap-2">
+            <FiMapPin className="text-neutral-400" />
+            {PROFILE.location} <span className="text-neutral-400">· {PROFILE.relocation}</span>
+          </p>
         </div>
 
         {/* Footer */}
-        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-[11px] text-neutral-500 lg:mt-auto lg:pt-10">
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-neutral-200 pt-5 text-[11px] text-neutral-500 dark:border-neutral-800 lg:mt-auto lg:pt-8">
           <LiveClock />
           <span>/ © 2026</span>
-          <LiveViewers />
+          <ViewCounter />
         </div>
       </aside>
 

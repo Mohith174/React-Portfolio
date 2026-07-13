@@ -1,203 +1,160 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SectionHeader from "../SectionHeader";
 
-// --- stats helpers -------------------------------------------------------
-
-// Standard normal via Box–Muller.
-const randNormal = () => {
-  let u = 0;
-  let v = 0;
-  while (u === 0) u = Math.random();
-  while (v === 0) v = Math.random();
-  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+// Rough normal CDF (Abramowitz-Stegun erf) to estimate a playful percentile.
+const normalCdf = (x, mean, sd) => {
+  const z = (x - mean) / (sd * Math.SQRT2);
+  const t = 1 / (1 + 0.3275911 * Math.abs(z));
+  const y =
+    1 -
+    (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t +
+      0.254829592) *
+      t *
+      Math.exp(-z * z);
+  const erf = z >= 0 ? y : -y;
+  return 0.5 * (1 + erf);
 };
 
-const pearson = (pts) => {
-  const n = pts.length;
-  const mx = pts.reduce((s, p) => s + p.x, 0) / n;
-  const my = pts.reduce((s, p) => s + p.y, 0) / n;
-  let num = 0;
-  let dx = 0;
-  let dy = 0;
-  pts.forEach((p) => {
-    num += (p.x - mx) * (p.y - my);
-    dx += (p.x - mx) ** 2;
-    dy += (p.y - my) ** 2;
-  });
-  return num / Math.sqrt(dx * dy || 1);
+// Share of people slower than you (mean simple reaction ≈ 273ms, sd ≈ 60).
+const fasterThan = (ms) => Math.round((1 - normalCdf(ms, 273, 60)) * 100);
+
+const STATES = {
+  idle: {
+    box: "border-neutral-300 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900",
+    text: "text-neutral-500",
+  },
+  waiting: {
+    box: "border-amber-400 bg-amber-50 dark:border-amber-500/50 dark:bg-amber-500/10",
+    text: "text-amber-600 dark:text-amber-400",
+  },
+  ready: {
+    box: "border-emerald-500 bg-emerald-500 cursor-pointer",
+    text: "text-white",
+  },
+  early: {
+    box: "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-500/10",
+    text: "text-red-600 dark:text-red-400",
+  },
+  result: {
+    box: "border-accent bg-accent/10 cursor-pointer",
+    text: "text-accent",
+  },
 };
-
-const clampR = (r) => Math.max(-0.95, Math.min(0.95, r));
-
-// Build one round: 45 points with a known target correlation, plus 3 options.
-const makeRound = () => {
-  const target = clampR((0.15 + Math.random() * 0.8) * (Math.random() < 0.5 ? -1 : 1));
-  const pts = Array.from({ length: 45 }, () => {
-    const z1 = randNormal();
-    const z2 = randNormal();
-    return { x: z1, y: target * z1 + Math.sqrt(1 - target * target) * z2 };
-  });
-
-  const actual = pearson(pts);
-  const base = Math.round(actual * 10) / 10; // nearest 0.1
-  const delta = 0.3 + Math.random() * 0.2;
-  const raw = [base, clampR(base + delta), clampR(base - delta)]
-    .map((v) => Math.round(v * 10) / 10);
-
-  // De-duplicate while keeping three distinct choices.
-  const options = [];
-  raw.forEach((v) => {
-    if (!options.some((o) => Math.abs(o - v) < 0.05)) options.push(v);
-  });
-  while (options.length < 3) {
-    const cand = Math.round(clampR(base + (Math.random() - 0.5) * 1.4) * 10) / 10;
-    if (!options.some((o) => Math.abs(o - cand) < 0.05)) options.push(cand);
-  }
-
-  // The correct option is whichever is closest to the true r.
-  const correct = options.reduce((best, o) =>
-    Math.abs(o - actual) < Math.abs(best - actual) ? o : best
-  );
-
-  return {
-    pts,
-    actual,
-    options: options.sort((a, b) => a - b),
-    correct,
-  };
-};
-
-// --- scatter plot --------------------------------------------------------
-
-const Scatter = ({ pts }) => {
-  const W = 320;
-  const H = 220;
-  const pad = 16;
-  const xs = pts.map((p) => p.x);
-  const ys = pts.map((p) => p.y);
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-  const sx = (x) => pad + ((x - minX) / (maxX - minX || 1)) * (W - 2 * pad);
-  const sy = (y) => H - pad - ((y - minY) / (maxY - minY || 1)) * (H - 2 * pad);
-
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full max-w-md" role="img" aria-label="Scatter plot">
-      <rect x="0" y="0" width={W} height={H} className="fill-neutral-100 dark:fill-neutral-900" rx="8" />
-      <line x1={pad} y1={H - pad} x2={W - pad} y2={H - pad} className="stroke-neutral-300 dark:stroke-neutral-700" strokeWidth="1" />
-      <line x1={pad} y1={pad} x2={pad} y2={H - pad} className="stroke-neutral-300 dark:stroke-neutral-700" strokeWidth="1" />
-      {pts.map((p, i) => (
-        <circle key={i} cx={sx(p.x)} cy={sy(p.y)} r="3" className="fill-accent" opacity="0.75" />
-      ))}
-    </svg>
-  );
-};
-
-// --- section -------------------------------------------------------------
-
-const fmt = (r) => (r > 0 ? "+" : "") + r.toFixed(2);
 
 const ChallengeSection = () => {
-  const [round, setRound] = useState(null);
-  const [picked, setPicked] = useState(null);
-  const [score, setScore] = useState({ hits: 0, total: 0 });
-
-  const newRound = useCallback(() => {
-    setPicked(null);
-    setRound(makeRound());
-  }, []);
+  const [phase, setPhase] = useState("idle");
+  const [ms, setMs] = useState(null);
+  const [best, setBest] = useState(null);
+  const [times, setTimes] = useState([]);
+  const timeoutRef = useRef(null);
+  const readyAtRef = useRef(0);
 
   useEffect(() => {
-    newRound();
-  }, [newRound]);
+    const stored = Number(localStorage.getItem("reaction-best"));
+    if (stored) setBest(stored);
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
 
-  const isCorrect = picked !== null && round && picked === round.correct;
+  const arm = useCallback(() => {
+    setPhase("waiting");
+    setMs(null);
+    const delay = 1200 + Math.random() * 2600; // 1.2–3.8s
+    timeoutRef.current = setTimeout(() => {
+      readyAtRef.current = performance.now();
+      setPhase("ready");
+    }, delay);
+  }, []);
 
-  const choose = (opt) => {
-    if (picked !== null || !round) return;
-    setPicked(opt);
-    setScore((s) => ({
-      hits: s.hits + (opt === round.correct ? 1 : 0),
-      total: s.total + 1,
-    }));
+  const handleClick = () => {
+    if (phase === "idle" || phase === "early" || phase === "result") {
+      arm();
+    } else if (phase === "waiting") {
+      clearTimeout(timeoutRef.current);
+      setPhase("early");
+    } else if (phase === "ready") {
+      const elapsed = Math.round(performance.now() - readyAtRef.current);
+      setMs(elapsed);
+      setTimes((t) => [...t, elapsed]);
+      setBest((b) => {
+        const next = b ? Math.min(b, elapsed) : elapsed;
+        localStorage.setItem("reaction-best", String(next));
+        return next;
+      });
+      setPhase("result");
+    }
   };
 
-  const accuracy = useMemo(
-    () => (score.total ? Math.round((score.hits / score.total) * 100) : 0),
-    [score]
-  );
+  const avg = times.length
+    ? Math.round(times.reduce((a, b) => a + b, 0) / times.length)
+    : null;
 
-  if (!round) return <section id="challenge" className="scroll-mt-24 py-16" />;
+  const label = {
+    idle: "click to start",
+    waiting: "wait for green…",
+    ready: "CLICK!",
+    early: "too soon — click to retry",
+    result: `${ms} ms`,
+  }[phase];
+
+  const s = STATES[phase];
 
   return (
-    <section id="challenge" className="scroll-mt-24 py-16">
+    <section id="challenge" className="scroll-mt-24 py-14">
       <SectionHeader num="04" title="CHALLENGE" />
       <p className="mb-8 max-w-2xl text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-400">
-        A little data-science game. Eyeball the scatter plot and guess its correlation
-        coefficient <span className="text-accent">r</span>. I&rsquo;ll reveal the real number —
-        it&rsquo;s computed live from the points, no cheating.
+        Test my reflexes — or yours. Click <span className="text-accent">start</span>, wait for the
+        box to turn green, then click as fast as you can. (I like to think my turnaround time is
+        about this quick.)
       </p>
 
       <div className="rounded-lg border border-neutral-200 bg-white/40 p-6 dark:border-neutral-800 dark:bg-neutral-900/40">
-        <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
-          <Scatter pts={round.pts} />
+        <button
+          onClick={handleClick}
+          className={`flex h-48 w-full flex-col items-center justify-center rounded-lg border-2 transition-colors ${s.box}`}
+          aria-label="Reaction test area"
+        >
+          <span className={`text-2xl font-bold ${s.text}`}>{label}</span>
+          {phase === "result" && (
+            <span className="mt-2 text-sm text-neutral-500">
+              faster than ~{Math.max(1, Math.min(99, fasterThan(ms)))}% of people · click to go again
+            </span>
+          )}
+          {phase === "ready" && (
+            <span className="mt-2 text-sm text-white/80">now!</span>
+          )}
+        </button>
 
-          <div className="w-full flex-1">
-            <p className="mb-3 text-xs tracking-wider text-neutral-500">GUESS THE CORRELATION</p>
-            <div className="flex flex-wrap gap-2">
-              {round.options.map((opt) => {
-                const revealed = picked !== null;
-                const isThisCorrect = opt === round.correct;
-                const isThisPicked = opt === picked;
-                let cls =
-                  "border-neutral-300 text-neutral-700 hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-300";
-                if (revealed && isThisCorrect) cls = "border-emerald-500 text-emerald-500";
-                else if (revealed && isThisPicked) cls = "border-red-500 text-red-500";
-                else if (revealed) cls = "border-neutral-200 text-neutral-400 dark:border-neutral-800";
-                return (
-                  <button
-                    key={opt}
-                    onClick={() => choose(opt)}
-                    disabled={revealed}
-                    className={`rounded border px-4 py-2 text-sm transition-colors disabled:cursor-default ${cls}`}
-                  >
-                    {fmt(opt)}
-                  </button>
-                );
-              })}
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-4 text-sm">
+          <div className="flex gap-8">
+            <div>
+              <div className="text-xl font-bold text-accent">{best ? `${best} ms` : "—"}</div>
+              <div className="text-xs text-neutral-500">your best</div>
             </div>
-
-            <div className="mt-5 min-h-[3.5rem] text-sm">
-              {picked !== null && (
-                <div className="space-y-1">
-                  <p className={isCorrect ? "text-emerald-500" : "text-red-500"}>
-                    {isCorrect ? "> correct." : "> not quite."} actual r = {fmt(round.actual)}
-                  </p>
-                  <p className="text-neutral-500">
-                    {Math.abs(round.actual) > 0.7
-                      ? "a strong relationship — points hug a clear line."
-                      : Math.abs(round.actual) > 0.4
-                      ? "a moderate relationship — trend visible through the noise."
-                      : "a weak relationship — mostly scatter."}
-                  </p>
-                </div>
-              )}
+            <div>
+              <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                {avg ? `${avg} ms` : "—"}
+              </div>
+              <div className="text-xs text-neutral-500">your avg</div>
             </div>
-
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-xs text-neutral-500">
-                score {score.hits}/{score.total}
-                {score.total > 0 && ` · ${accuracy}%`}
-              </span>
-              <button
-                onClick={newRound}
-                className="rounded border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-400"
-              >
-                {picked !== null ? "next round →" : "new plot"}
-              </button>
+            <div>
+              <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                {times.length}
+              </div>
+              <div className="text-xs text-neutral-500">attempts</div>
             </div>
           </div>
+          {times.length > 0 && (
+            <button
+              onClick={() => {
+                setTimes([]);
+                setPhase("idle");
+                setMs(null);
+              }}
+              className="rounded border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:text-neutral-400"
+            >
+              reset
+            </button>
+          )}
         </div>
       </div>
     </section>

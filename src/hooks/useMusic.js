@@ -1,23 +1,43 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Royalty-free / listener-supported ambient-chill streams (SomaFM). We try
-// them in order; if none can play (offline, blocked, stream down), we fall
-// back to a generated ambient pad so the button always does something.
+// Chill / jazzy stations, tried in order. FluxFM Chillhop is a redirecting
+// endpoint (302 → fresh session stream) so the browser always gets a live URL.
+// SomaFM channels are the fallback. If none play, we drop to a generated pad.
 const STREAMS = [
-  "https://ice1.somafm.com/groovesalad-128-mp3",
-  "https://ice2.somafm.com/groovesalad-128-mp3",
-  "https://ice1.somafm.com/fluid-128-mp3",
+  "https://streams.fluxfm.de/Chillhop/mp3-320/", // FluxFM Chillhop (jazzy beats)
+  "https://ice2.somafm.com/gsclassic-128-mp3",    // SomaFM Groove Salad Classic
+  "https://ice1.somafm.com/sonicuniverse-128-mp3", // SomaFM Sonic Universe (jazz)
 ];
 
 export const useMusic = () => {
   const [playing, setPlaying] = useState(false);
-  const [source, setSource] = useState(null); // 'radio' | 'ambient'
   const [loading, setLoading] = useState(false);
 
   const audioRef = useRef(null);
   const ambientRef = useRef(null); // teardown fn for the synth fallback
+  const tokenRef = useRef(0); // bumped on every start/stop to cancel stale async work
 
-  // --- generative fallback (Web Audio) ----------------------------------
+  const teardown = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.removeAttribute("src");
+      audioRef.current.load();
+      audioRef.current = null;
+    }
+    if (ambientRef.current) {
+      ambientRef.current();
+      ambientRef.current = null;
+    }
+  }, []);
+
+  const stop = useCallback(() => {
+    tokenRef.current += 1; // invalidate any in-flight stream attempt
+    teardown();
+    setPlaying(false);
+    setLoading(false);
+  }, [teardown]);
+
+  // Generated ambient pad — only used if every stream fails.
   const startAmbient = useCallback(() => {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return () => {};
@@ -30,7 +50,6 @@ export const useMusic = () => {
     filter.frequency.value = 700;
     master.connect(ctx.destination);
     filter.connect(master);
-
     const nodes = [];
     [110, 164.81, 220, 277.18].forEach((f, i) => {
       const osc = ctx.createOscillator();
@@ -39,88 +58,61 @@ export const useMusic = () => {
       osc.detune.value = (i - 1.5) * 4;
       const g = ctx.createGain();
       g.gain.value = 0.25;
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.05 + i * 0.017;
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 0.12;
-      lfo.connect(lfoGain);
-      lfoGain.connect(g.gain);
       osc.connect(g);
       g.connect(filter);
       osc.start();
-      lfo.start();
-      nodes.push(osc, lfo);
+      nodes.push(osc);
     });
-
-    setSource("ambient");
-    setPlaying(true);
     return () => {
       nodes.forEach((n) => { try { n.stop(); } catch { /* noop */ } });
       try { ctx.close(); } catch { /* noop */ }
     };
   }, []);
 
-  const stop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = "";
-      audioRef.current = null;
-    }
-    if (ambientRef.current) {
-      ambientRef.current();
-      ambientRef.current = null;
-    }
-    setPlaying(false);
-    setSource(null);
-    setLoading(false);
-  }, []);
-
   const start = useCallback(() => {
+    const token = (tokenRef.current += 1);
     setLoading(true);
-    let streamIndex = 0;
-    let settled = false;
+    let idx = 0;
+
+    const alive = () => token === tokenRef.current;
 
     const goAmbient = () => {
-      if (settled) return;
-      settled = true;
-      setLoading(false);
-      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      if (!alive()) return;
+      teardown();
       ambientRef.current = startAmbient();
+      setLoading(false);
+      setPlaying(true);
     };
 
-    const tryStream = () => {
-      if (streamIndex >= STREAMS.length) return goAmbient();
-      const audio = new Audio(STREAMS[streamIndex]);
-      audio.crossOrigin = "anonymous";
+    const tryNext = () => {
+      if (!alive()) return;
+      if (idx >= STREAMS.length) return goAmbient();
+      const audio = new Audio(STREAMS[idx]);
       audio.preload = "auto";
-      audio.volume = 0.55;
+      audio.volume = 0.5;
       audioRef.current = audio;
 
       audio.addEventListener("playing", () => {
-        if (settled) return;
-        settled = true;
+        if (!alive()) { audio.pause(); return; }
         setLoading(false);
-        setSource("radio");
         setPlaying(true);
       }, { once: true });
 
       audio.addEventListener("error", () => {
-        streamIndex += 1;
-        tryStream();
+        if (!alive()) return;
+        idx += 1;
+        tryNext();
       }, { once: true });
 
       audio.play().catch(() => {
-        // Autoplay/policy or network reject — try next, then ambient.
-        streamIndex += 1;
-        tryStream();
+        if (!alive()) return;
+        idx += 1;
+        tryNext();
       });
     };
 
-    // If nothing has started within 6s, use the fallback.
-    const guard = setTimeout(goAmbient, 6000);
-    tryStream();
-    return () => clearTimeout(guard);
-  }, [startAmbient]);
+    tryNext();
+  }, [startAmbient, teardown]);
 
   const toggle = useCallback(() => {
     if (playing || loading) stop();
@@ -129,5 +121,5 @@ export const useMusic = () => {
 
   useEffect(() => () => stop(), [stop]);
 
-  return { playing, loading, source, toggle };
+  return { playing, loading, toggle };
 };

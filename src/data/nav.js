@@ -5,6 +5,5 @@ export const SECTIONS = [
   { id: "experience", num: "02", label: "EXPERIENCE" },
   { id: "projects", num: "03", label: "PROJECTS" },
   { id: "challenge", num: "04", label: "CHALLENGE" },
-  { id: "recognition", num: "05", label: "RECOGNITION" },
-  { id: "contact", num: "06", label: "CONTACT" },
+  { id: "contact", num: "05", label: "CONTACT" },
 ];

@@ -6,7 +6,7 @@
 
 :root {
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html {
@@ -22,9 +22,12 @@ html {
   color: #04141a;
 }
 
-/* Thin, theme-aware scrollbar so the dark terminal look stays consistent */
+/* Thin, theme-aware scrollbar so the terminal look stays consistent */
 * {
   scrollbar-width: thin;
+  scrollbar-color: #d4d4d8 transparent;
+}
+.dark * {
   scrollbar-color: #3f3f46 transparent;
 }
 *::-webkit-scrollbar {
@@ -32,15 +35,27 @@ html {
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #d4d4d8;
   border-radius: 8px;
 }
-.light *::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
+.dark *::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+
+/* Equalizer bars for the music button — bounce like sound frequencies */
+@keyframes eqbar {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+.eq-bar {
+  transform-origin: bottom;
+  transform: scaleY(0.35);
+}
+.eq-playing .eq-bar {
+  animation: eqbar 0.9s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
+  .eq-playing .eq-bar { animation: none; transform: scaleY(0.6); }
 }

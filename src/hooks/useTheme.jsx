@@ -3,10 +3,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ThemeContext = createContext(null);
 
 const getInitialTheme = () => {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   const stored = localStorage.getItem("theme");
-  // Dark is the intended default; only honor an explicit stored "light".
-  return stored === "light" ? "light" : "dark";
+  // Light/white is the intended default; only honor an explicit stored "dark".
+  return stored === "dark" ? "dark" : "light";
 };
 
 export const ThemeProvider = ({ children }) => {
