@@ -5,18 +5,42 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Host Grotesk", sans-serif;
-}
-
-.font-mono {
   font-family: "JetBrains Mono", ui-monospace, monospace;
+  color-scheme: dark;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+.font-sans {
+  font-family: "Host Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
 ::selection {
-  background: #a855f7;
-  color: #fff;
+  background: #22d3ee;
+  color: #04141a;
+}
+
+/* Thin, theme-aware scrollbar so the dark terminal look stays consistent */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 8px;
+}
+.light *::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
