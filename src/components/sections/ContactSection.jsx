@@ -8,7 +8,7 @@ import { PROFILE } from "../../data/profile";
 
 // EmailJS config. Service ID confirmed by owner; template + public key should
 // belong to the SAME EmailJS account as this service — update if they differ.
-const EMAILJS = { service: "service_6uvinha", template: "template_60umwhq", key: "xwUnx9HFKdDo6_rzI" };
+const EMAILJS = { service: "service_6uvinha", template: "template_i8wzunb", key: "xwUnx9HFKdDo6_rzI" };
 
 const LINKS = [
   { key: "email", label: "email", href: `mailto:${PROFILE.links.email}`, Icon: HiOutlineMail, external: false },
