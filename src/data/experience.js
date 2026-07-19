@@ -3,7 +3,7 @@
 
 export const EXPERIENCES = [
   {
-    role: "AI & Document Intelligence Extern",
+    role: "AI Engineer Extern",
     company: "Pfizer (Remote Externship via Extern)",
     location: "Remote",
     dates: "Jun 2026 – Present",
