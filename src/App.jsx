@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import ProjectDetail from "./pages/ProjectDetail";
 import Writing from "./pages/Writing";
 import ArticleDetail from "./pages/ArticleDetail";
+import { PUBLISHED } from "./data/articles";
 
 const App = () => {
   const location = useLocation();
@@ -31,22 +32,28 @@ const App = () => {
                 </PageTransition>
               }
             />
-            <Route
-              path="/writing"
-              element={
-                <PageTransition>
-                  <Writing />
-                </PageTransition>
-              }
-            />
-            <Route
-              path="/writing/:slug"
-              element={
-                <PageTransition>
-                  <ArticleDetail />
-                </PageTransition>
-              }
-            />
+            {/* Writing routes exist only when something is published, so a
+                draft is not reachable by typing its URL. */}
+            {PUBLISHED.length > 0 && (
+              <Route
+                path="/writing"
+                element={
+                  <PageTransition>
+                    <Writing />
+                  </PageTransition>
+                }
+              />
+            )}
+            {PUBLISHED.length > 0 && (
+              <Route
+                path="/writing/:slug"
+                element={
+                  <PageTransition>
+                    <ArticleDetail />
+                  </PageTransition>
+                }
+              />
+            )}
           </Routes>
         </AnimatePresence>
       </div>

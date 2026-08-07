@@ -25,7 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { ARTICLES } from "../src/data/articles.js";
+import { PUBLISHED as ARTICLES } from "../src/data/articles.js";
 import { PROJECTS } from "../src/data/projects.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -125,9 +125,13 @@ const write = (path, html) => {
 
 const pages = [];
 
-// Writing index
-pages.push({
-  path: "/writing",
+// Writing index — only when something is published. Emitting this file while
+// the route was gated is exactly how a draft would leak: Vercel serves the
+// filesystem before it consults rewrites, so a stray static file is reachable
+// even with no matching React route.
+if (ARTICLES.length > 0)
+  pages.push({
+    path: "/writing",
   title: `Writing — ${AUTHOR}`,
   description:
     "Essays where I went and got the data rather than reacting to the headline. Usually there is a thing I built underneath.",
@@ -149,7 +153,7 @@ pages.push({
         `<p>${esc(a.dek)}</p></article>`
     ).join("") +
     `</main>`,
-});
+  });
 
 // One page per article — the whole point of the exercise.
 for (const a of ARTICLES) {

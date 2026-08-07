@@ -44,62 +44,6 @@ Streamed response, persisted for the accuracy dashboard`,
     screenshots: [],
   },
   {
-    slug: "dna-screening-tracker",
-    title: "DNA Screening Tracker",
-    tagline:
-      "A sourced record of what DNA synthesis providers publicly say about screening orders — and what nobody is legally required to say.",
-    summary:
-      "An open dataset of biosecurity screening disclosure across 24 commercial DNA synthesis providers, built so that a claim cannot enter it without a dated public source.",
-    status: "live",
-    repoUrl: "https://github.com/Mohith174/dna-synthesis-screening-tracker",
-    liveUrl: "https://www.mohithkodavati.com/dna-screening",
-    tech: ["Node.js", "Static site", "JSON Schema", "GitHub Actions", "Structured data"],
-    problem:
-      "Turning an AI-designed genome into a real organism requires ordering DNA from a commercial provider — the one physical chokepoint in an otherwise all-software pipeline. Screening at that chokepoint is voluntary almost everywhere, and no public record existed of which providers say they screen. This builds that record, for 24 providers across 7 countries, updated monthly.",
-    decisions: [
-      {
-        title: "The dataset records disclosure, and the build enforces it",
-        body: "A provider that publishes nothing is marked 'not stated', never 'no' — a company can screen rigorously and never write about it, so 'no' would assert something no outsider can verify. That rule isn't a convention someone has to remember: CI rejects any commit that sets a screening field to 'no', or that moves a cell off 'unverified' without a source URL, a note locating the claim on the page, and a verification date.",
-      },
-      {
-        title: "Every row is pre-rendered, because the readers don't run JavaScript",
-        body: "The natural build is to fetch the JSON and render the table client-side. That would have quietly defeated the project: GPTBot, ClaudeBot, PerplexityBot and CCBot largely don't execute JS, so a dataset published to be cited would have been an empty table to every engine that matters. The build writes all 24 rows into static HTML and JavaScript only adds search and sorting on top.",
-      },
-      {
-        title: "Automation detects change; it never edits data",
-        body: "A monthly job re-fetches each policy page and diffs it against a stored hash, then opens an issue. It does not touch the dataset — judging whether reworded text is a real policy change stays with a person. The subtlety is in the hashing: raw HTML would flag all 24 providers every month, since corporate pages embed build ids and timestamps that change per request, so volatile token shapes are blanked before hashing.",
-      },
-    ],
-    stack: [
-      { component: "Data layer", tech: "Single providers.json + JSON Schema — no database" },
-      { component: "Build", tech: "Node built-ins only, zero runtime dependencies" },
-      { component: "Integrity gate", tech: "validate.mjs — blocks unsourced claims in CI" },
-      { component: "Change detection", tech: "GitHub Actions monthly cron → issue on diff" },
-      { component: "Discoverability", tech: "Dataset + FAQPage JSON-LD, llms.txt, CSV/JSON endpoints" },
-    ],
-    diagram: `data/providers.json  ──►  validate.mjs  (CI gate: no unsourced claims)
-        │
-        ▼
-    build.mjs
-        │
-        ├──► index.html      all 24 rows pre-rendered, JSON-LD
-        ├──► methodology.html
-        └──► providers.json · providers.csv · llms.txt · sitemap
-
-    check-policies.mjs  (monthly cron)
-        │
-    fetch policy pages ──► strip volatile tokens ──► hash
-        │
-    changed? ──► open GitHub issue ──► human reviews
-                 (never edits the dataset)`,
-    screenshots: [],
-    metrics: [
-      { label: "Providers tracked", value: "24" },
-      { label: "Verified against primary sources", value: "13" },
-      { label: "Under a binding legal mandate", value: "0" },
-    ],
-  },
-  {
     slug: "paga-monitor",
     title: "PAGA Monitor",
     tagline: "Turns California's PAGA labor-filing database into scored, searchable leads.",

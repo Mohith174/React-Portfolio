@@ -7,6 +7,7 @@ import ProjectsSection from "../components/sections/ProjectsSection";
 import WritingSection from "../components/sections/WritingSection";
 import ChallengeSection from "../components/sections/ChallengeSection";
 import ContactSection from "../components/sections/ContactSection";
+import { PUBLISHED } from "../data/articles";
 
 const Home = () => {
   const { hash } = useLocation();
@@ -26,7 +27,7 @@ const Home = () => {
         <AboutSection />
         <ExperienceSection />
         <ProjectsSection />
-        <WritingSection />
+        {PUBLISHED.length > 0 && <WritingSection />}
         <ChallengeSection />
         <ContactSection />
       </main>
