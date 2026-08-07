@@ -50,9 +50,9 @@ Streamed response, persisted for the accuracy dashboard`,
       "A sourced record of what DNA synthesis providers publicly say about screening orders — and what nobody is legally required to say.",
     summary:
       "An open dataset of biosecurity screening disclosure across 24 commercial DNA synthesis providers, built so that a claim cannot enter it without a dated public source.",
-    status: "building",
+    status: "live",
     repoUrl: "https://github.com/Mohith174/dna-synthesis-screening-tracker",
-    liveUrl: null,
+    liveUrl: "https://www.mohithkodavati.com/dna-screening",
     tech: ["Node.js", "Static site", "JSON Schema", "GitHub Actions", "Structured data"],
     problem:
       "Turning an AI-designed genome into a real organism requires ordering DNA from a commercial provider — the one physical chokepoint in an otherwise all-software pipeline. Screening at that chokepoint is voluntary almost everywhere, and no public record existed of which providers say they screen. This builds that record, for 24 providers across 7 countries, updated monthly.",
@@ -95,8 +95,8 @@ Streamed response, persisted for the accuracy dashboard`,
     screenshots: [],
     metrics: [
       { label: "Providers tracked", value: "24" },
-      { label: "Runtime dependencies", value: "0" },
-      { label: "Re-verified", value: "Monthly" },
+      { label: "Verified against primary sources", value: "13" },
+      { label: "Under a binding legal mandate", value: "0" },
     ],
   },
   {
