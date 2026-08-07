@@ -1,7 +1,7 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "comment": "The DNA screening tracker is a separate repo and deploy, but it is SERVED from this domain. A subdomain would be a separate site to search engines and would inherit none of this domain's authority; a rewrite is a server-side proxy, so crawlers only ever see one origin. Order matters: these must precede the SPA catch-all below, or React Router swallows them.",
       "source": "/dna-screening",
       "destination": "https://dna-screening-tracker.vercel.app/"
     },
