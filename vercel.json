@@ -1,4 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/dna-screening", "destination": "https://dna-screening-tracker.vercel.app/" },
+    { "source": "/dna-screening/", "destination": "https://dna-screening-tracker.vercel.app/" },
+    { "source": "/dna-screening/:path*", "destination": "https://dna-screening-tracker.vercel.app/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
