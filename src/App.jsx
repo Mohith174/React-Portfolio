@@ -4,6 +4,8 @@ import { ThemeProvider } from "./hooks/useTheme";
 import PageTransition from "./components/PageTransition";
 import Home from "./pages/Home";
 import ProjectDetail from "./pages/ProjectDetail";
+import Writing from "./pages/Writing";
+import ArticleDetail from "./pages/ArticleDetail";
 
 const App = () => {
   const location = useLocation();
@@ -26,6 +28,22 @@ const App = () => {
               element={
                 <PageTransition>
                   <ProjectDetail />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/writing"
+              element={
+                <PageTransition>
+                  <Writing />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/writing/:slug"
+              element={
+                <PageTransition>
+                  <ArticleDetail />
                 </PageTransition>
               }
             />

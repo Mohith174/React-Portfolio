@@ -1,4 +1,36 @@
+# Only the robots.txt at the domain ROOT is authoritative. The tracker served at
+# /dna-screening/ ships its own copy, but no crawler reads it — this file governs
+# that path too, which is why the AI-crawler permissions below matter here.
+
 User-agent: *
 Allow: /
 
-Sitemap: https://mohithkodavati.com/sitemap.xml
+# AI answer engines and training crawlers, explicitly permitted.
+# The dataset at /dna-screening/ is published to be cited; blocking these would
+# defeat the point of publishing it.
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+User-agent: CCBot
+Allow: /
+User-agent: Amazonbot
+Allow: /
+User-agent: cohere-ai
+Allow: /
+
+Sitemap: https://www.mohithkodavati.com/sitemap.xml

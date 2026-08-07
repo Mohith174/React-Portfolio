@@ -1,23 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  URLs here use the www form because the apex 308-redirects to it. A sitemap
+  listing the redirecting form makes every entry a wasted hop and muddies which
+  URL is canonical.
+
+  /dna-screening/* is a separate deploy served through a rewrite in vercel.json.
+  It is listed here because, to a crawler, it is simply part of this origin.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mohithkodavati.com/</loc>
+    <loc>https://www.mohithkodavati.com/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://mohithkodavati.com/projects/spectr</loc>
+    <loc>https://www.mohithkodavati.com/writing</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.mohithkodavati.com/writing/dna-synthesis-screening</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.mohithkodavati.com/dna-screening/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.mohithkodavati.com/dna-screening/methodology.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.mohithkodavati.com/projects/spectr</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mohithkodavati.com/projects/wiki-kafka</loc>
+    <loc>https://www.mohithkodavati.com/projects/dna-screening-tracker</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mohithkodavati.com/projects/paga-monitor</loc>
+    <loc>https://www.mohithkodavati.com/projects/wiki-kafka</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mohithkodavati.com/projects/payna</loc>
+    <loc>https://www.mohithkodavati.com/projects/paga-monitor</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.mohithkodavati.com/projects/payna</loc>
     <priority>0.8</priority>
   </url>
 </urlset>
