@@ -39,3 +39,18 @@ dataset therefore have to be set here.
 
 Sitemap URLs use the `www` form because the apex 308-redirects to it; listing the
 apex form makes every entry a wasted redirect hop.
+
+## The trailing slash on /dna-screening is not optional
+
+The tracker uses **relative** asset paths (`style.css`, not `/style.css`) so it can be mounted at any
+path. That means the URL must end in a slash.
+
+At `/dna-screening/` the browser resolves `style.css` to `/dna-screening/style.css`, which the rewrite
+proxies correctly. At `/dna-screening` — no slash — it resolves to `/style.css` at the domain root,
+which the SPA catch-all answers with `index.html`. The browser receives HTML where it expected CSS,
+silently discards it, and renders the tracker completely unstyled with no working JavaScript.
+
+Hence the permanent redirect above. It is listed under `redirects`, not `rewrites`, because Vercel
+processes redirects first — a rewrite would never fire in time to fix the resolution.
+
+Always link to `/dna-screening/` with the slash.

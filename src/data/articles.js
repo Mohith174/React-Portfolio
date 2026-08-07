@@ -24,7 +24,7 @@ export const ARTICLES = [
       title: "DNA Synthesis Screening Tracker",
       description:
         "24 commercial synthesis providers, sourced screening-disclosure status, updated monthly.",
-      href: "/dna-screening",
+      href: "/dna-screening/",
       repo: "https://github.com/Mohith174/dna-synthesis-screening-tracker",
     },
     body: [
