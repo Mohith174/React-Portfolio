@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowLeft } from "react-icons/fa6";
-import { ARTICLES } from "../data/articles";
+import Sidebar from "../components/Sidebar";
+import { PUBLISHED as ARTICLES } from "../data/articles";
 
 const Writing = () => (
-  <div className="mx-auto max-w-2xl px-6 pb-20 pt-10 sm:px-10">
+  <div className="lg:pl-[340px]">
+    <Sidebar />
+    <div className="mx-auto max-w-2xl px-6 pb-20 pt-10 sm:px-10 lg:px-16">
     <Link
       to="/"
       className="mb-10 inline-flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-accent"
@@ -20,7 +23,7 @@ const Writing = () => (
       <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 sm:text-4xl">
         Writing
       </h1>
-      <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-400">
+      <p className="mt-4 max-w-xl font-sans text-[15px] leading-relaxed text-neutral-600 dark:text-neutral-400">
         Pieces where I went and got the data rather than reacting to the headline. Usually
         there is a thing I built underneath.
       </p>
@@ -58,6 +61,7 @@ const Writing = () => (
           </Link>
         </motion.div>
       ))}
+      </div>
     </div>
   </div>
 );

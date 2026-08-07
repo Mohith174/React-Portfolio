@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import ProjectDetail from "./pages/ProjectDetail";
 import Writing from "./pages/Writing";
 import ArticleDetail from "./pages/ArticleDetail";
+import NotFound from "./pages/NotFound";
 import { PUBLISHED } from "./data/articles";
 
 const App = () => {
@@ -54,6 +55,14 @@ const App = () => {
                 }
               />
             )}
+            <Route
+              path="*"
+              element={
+                <PageTransition>
+                  <NotFound />
+                </PageTransition>
+              }
+            />
           </Routes>
         </AnimatePresence>
       </div>

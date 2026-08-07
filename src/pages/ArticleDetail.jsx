@@ -1,7 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaGithub, FaArrowUpRightFromSquare } from "react-icons/fa6";
-import { ARTICLES, getArticle } from "../data/articles";
+import Sidebar from "../components/Sidebar";
+import { PUBLISHED, getArticle } from "../data/articles";
 
 // Renders one structured block from an article body. Keeping the mapping here
 // (rather than storing HTML in the data file) means typography stays consistent
@@ -10,14 +11,14 @@ const Block = ({ block }) => {
   switch (block.type) {
     case "h2":
       return (
-        <h2 className="mb-3 mt-12 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        <h2 className="mb-3 mt-12 text-base font-semibold tracking-wider text-neutral-900 dark:text-neutral-100">
           {block.text}
         </h2>
       );
 
     case "quote":
       return (
-        <blockquote className="my-8 border-l-2 border-accent pl-5 text-lg font-medium leading-relaxed text-neutral-800 dark:text-neutral-200">
+        <blockquote className="my-8 border-l-2 border-accent pl-5 font-sans text-xl font-medium leading-relaxed text-neutral-800 dark:text-neutral-200">
           {block.text}
         </blockquote>
       );
@@ -36,7 +37,7 @@ const Block = ({ block }) => {
 
     case "note":
       return (
-        <div className="my-8 rounded-xl border border-amber-300/50 bg-amber-50/50 p-5 text-[14px] leading-relaxed text-neutral-700 dark:border-amber-700/40 dark:bg-amber-950/20 dark:text-neutral-300">
+        <div className="my-8 rounded-xl border border-neutral-200 bg-neutral-100/60 p-5 font-sans text-[15px] leading-relaxed text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400">
           {block.text}
         </div>
       );
@@ -47,7 +48,7 @@ const Block = ({ block }) => {
           {block.items.map((item) => (
             <li
               key={item}
-              className="border-l border-neutral-200 pl-4 text-[14px] leading-relaxed text-neutral-600 dark:border-neutral-800 dark:text-neutral-400"
+              className="border-l border-neutral-200 pl-4 font-sans text-[14px] leading-relaxed text-neutral-600 dark:border-neutral-800 dark:text-neutral-400"
             >
               {item}
             </li>
@@ -57,7 +58,7 @@ const Block = ({ block }) => {
 
     default:
       return (
-        <p className="mb-5 text-[16px] leading-[1.75] text-neutral-700 dark:text-neutral-300">
+        <p className="mb-5 font-sans text-[17px] leading-[1.75] text-neutral-700 dark:text-neutral-300">
           {block.text}
         </p>
       );
@@ -79,11 +80,13 @@ const ArticleDetail = () => {
     );
   }
 
-  const index = ARTICLES.findIndex((a) => a.slug === slug);
-  const next = ARTICLES.length > 1 ? ARTICLES[(index + 1) % ARTICLES.length] : null;
+  const index = PUBLISHED.findIndex((a) => a.slug === slug);
+  const next = PUBLISHED.length > 1 ? PUBLISHED[(index + 1) % PUBLISHED.length] : null;
 
   return (
-    <div className="mx-auto max-w-2xl px-6 pb-20 pt-10 sm:px-10">
+    <div className="lg:pl-[340px]">
+      <Sidebar />
+      <div className="mx-auto max-w-2xl px-6 pb-20 pt-10 sm:px-10 lg:px-16">
       <Link
         to="/writing"
         className="mb-10 inline-flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-accent"
@@ -115,7 +118,7 @@ const ArticleDetail = () => {
             {article.title}
           </h1>
 
-          <p className="mt-4 text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <p className="mt-4 font-sans text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
             {article.dek}
           </p>
         </header>
@@ -135,7 +138,7 @@ const ArticleDetail = () => {
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
             {article.companion.title}
           </h3>
-          <p className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+          <p className="mt-1.5 font-sans text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             {article.companion.description}
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
@@ -172,6 +175,7 @@ const ArticleDetail = () => {
             next: {next.title} →
           </Link>
         )}
+      </div>
       </div>
     </div>
   );
